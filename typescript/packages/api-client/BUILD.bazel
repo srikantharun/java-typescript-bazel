@@ -1,0 +1,53 @@
+"""
+API Client Package
+
+Modern TypeScript package demonstrating:
+- Aspect Build rules for optimal performance
+- Type-safe API client
+- Comprehensive testing with Jest
+- ESBuild bundling
+"""
+
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("//build_tools/typescript:ts_project_enhanced.bzl", "ts_library_with_tests")
+
+# Main TypeScript library
+ts_project(
+    name = "api-client",
+    srcs = ["src/index.ts"],
+    declaration = True,
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        "//:node_modules/@types/node",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Test configuration
+ts_project(
+    name = "api-client-test-lib",
+    srcs = ["test/index.test.ts"],
+    declaration = False,
+    tsconfig = "//:tsconfig.test.json",
+    deps = [
+        ":api-client",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/node",
+    ],
+    testonly = True,
+)
+
+# Jest tests
+jest_test(
+    name = "api-client-test",
+    config = "//:jest.config.js",
+    data = [
+        ":api-client-test-lib",
+        "//:node_modules/jest",
+        "//:node_modules/@jest/globals",
+    ],
+    node_modules = "//:node_modules",
+)

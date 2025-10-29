@@ -1,0 +1,42 @@
+"""
+Build tools and custom Bazel rules for the monorepo.
+"""
+
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+# Export custom rules for use across the monorepo
+exports_files([
+    "java/auto_test.bzl",
+    "java/dependency_analyzer.bzl",
+    "typescript/ts_project_enhanced.bzl",
+    "analysis/bep_analyzer.bzl",
+])
+
+# Python tooling for build analysis
+py_library(
+    name = "bazel_utils",
+    srcs = ["analysis/bazel_utils.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_binary(
+    name = "analyze_build",
+    srcs = ["analysis/analyze_build.py"],
+    deps = [":bazel_utils"],
+    visibility = ["//visibility:public"],
+)
+
+py_binary(
+    name = "dependency_graph",
+    srcs = ["analysis/dependency_graph.py"],
+    deps = [":bazel_utils"],
+    visibility = ["//visibility:public"],
+)
+
+py_binary(
+    name = "test_selector",
+    srcs = ["analysis/test_selector.py"],
+    deps = [":bazel_utils"],
+    main = "analysis/test_selector.py",
+    visibility = ["//visibility:public"],
+)

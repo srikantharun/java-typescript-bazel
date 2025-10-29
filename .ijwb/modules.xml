@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+IntelliJ module configuration for Bazel monorepo.
+Optimized for multi-language development (Java, TypeScript, Python).
+-->
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.ijwb/.blaze/modules/.project-data-dir.iml"
+              filepath="$PROJECT_DIR$/.ijwb/.blaze/modules/.project-data-dir.iml" />
+
+      <!-- Java modules -->
+      <module fileurl="file://$PROJECT_DIR$/.ijwb/.blaze/modules/java.iml"
+              filepath="$PROJECT_DIR$/.ijwb/.blaze/modules/java.iml" />
+
+      <!-- TypeScript modules -->
+      <module fileurl="file://$PROJECT_DIR$/.ijwb/.blaze/modules/typescript.iml"
+              filepath="$PROJECT_DIR$/.ijwb/.blaze/modules/typescript.iml" />
+
+      <!-- Build tools -->
+      <module fileurl="file://$PROJECT_DIR$/.ijwb/.blaze/modules/build_tools.iml"
+              filepath="$PROJECT_DIR$/.ijwb/.blaze/modules/build_tools.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,58 @@
+# IntelliJ Bazel Plugin Project Configuration
+# This file configures the IDE integration for optimal developer experience
+
+directories:
+  # Java sources
+  java/com/example
+
+  # TypeScript sources
+  typescript/packages
+
+  # Build tools and Starlark rules
+  build_tools
+
+  # Exclude generated files
+  -bazel-*
+  -.ijwb
+
+# Specify targets to sync for IDE integration
+targets:
+  //java/com/example/userservice:all
+  //typescript/packages/api-client:all
+  //build_tools:all
+
+# Additional directories for navigation
+additional_languages:
+  python
+  typescript
+  javascript
+
+# Java configuration
+java_language_level: 21
+
+# TypeScript/JavaScript support
+ts_config_rules:
+  //typescript/packages/api-client:api-client
+
+# Import external sources for better code navigation
+import_run_configurations: true
+
+# Derive targets from directories automatically
+derive_targets_from_directories: true
+
+# Shard count for parallel sync
+sync_flags:
+  --jobs=auto
+  --experimental_remote_merkle_tree_cache
+
+# Test flags
+test_flags:
+  --test_output=errors
+  --test_summary=detailed
+
+# Build flags specific to IDE
+build_flags:
+  --compilation_mode=fastbuild
+  --strategy=TypeScriptCompile=worker
+  --strategy=Javac=worker
+  --worker_max_instances=auto

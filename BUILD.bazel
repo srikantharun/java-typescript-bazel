@@ -1,0 +1,44 @@
+"""
+Root BUILD file for Enterprise Monorepo
+
+This showcases advanced Bazel patterns and build system architecture.
+"""
+
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
+
+# Exports configuration files for visibility
+exports_files([
+    "tsconfig.json",
+    "tsconfig.test.json",
+    "jest.config.js",
+    ".swcrc",
+    "MODULE.bazel",
+    ".bazelrc",
+])
+
+# Placeholder for node_modules - created by npm rules
+filegroup(
+    name = "node_modules",
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+# Test suite for the entire monorepo
+test_suite(
+    name = "all_tests",
+    tests = [
+        "//java/com/example/userservice:all_tests",
+        "//typescript/packages/api-client:api-client-test",
+    ],
+    tags = ["manual"],
+)
+
+# Build all targets
+filegroup(
+    name = "all",
+    srcs = [
+        "//java/com/example/userservice:userservice",
+        "//typescript/packages/api-client:api-client",
+        "//build_tools:all",
+    ],
+)

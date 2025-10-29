@@ -1,0 +1,168 @@
+# ==============================================================================
+# Enterprise Bazel Configuration
+# Optimized for large-scale monorepo with Java, TypeScript, and Python
+# ==============================================================================
+
+# Enable platform-specific configuration
+build --enable_platform_specific_config
+
+# ==============================================================================
+# Java Configuration
+# ==============================================================================
+build --java_language_version=21
+build --java_runtime_version=remotejdk_21
+build --tool_java_language_version=21
+build --tool_java_runtime_version=remotejdk_21
+
+# Enable Java modules
+build --experimental_java_classpath=bazel
+
+# ==============================================================================
+# Performance Optimizations
+# ==============================================================================
+
+# Use multiple workers for parallel execution
+build --worker_max_instances=auto
+build --worker_sandboxing
+
+# Enable disk cache with automatic garbage collection
+build --disk_cache=~/.cache/bazel/enterprise_monorepo
+build --experimental_disk_cache_gc_max_size=50G
+build --experimental_disk_cache_gc_max_age=30d
+
+# Repository cache with hardlinks for faster fetches
+build --experimental_repository_cache_hardlinks
+build --repository_cache=~/.cache/bazel/repository_cache
+
+# Action cache optimizations
+build --experimental_remote_merkle_tree_cache
+build --experimental_remote_cache_compression
+
+# Incremental actions
+build --experimental_incremental_dexing=yes
+
+# ==============================================================================
+# Remote Execution and Caching (Configure for your environment)
+# ==============================================================================
+
+# Example remote cache configuration (uncomment and configure)
+# build:remote --remote_cache=grpc://your-cache-server:port
+# build:remote --remote_timeout=60s
+# build:remote --remote_upload_local_results=true
+# build:remote --experimental_remote_cache_async
+# build:remote --remote_local_fallback
+
+# ==============================================================================
+# Build Event Protocol (BEP) for Build Observability
+# ==============================================================================
+
+# Enable BEP for CI builds
+build:ci --build_event_json_file=build_events.json
+build:ci --build_event_json_file_path_conversion=false
+build:ci --nolegacy_important_outputs
+build:ci --experimental_collect_system_network_usage
+build:ci --experimental_collect_resource_estimation
+build:ci --build_metadata=ROLE=CI
+
+# Include timing information
+build:ci --experimental_build_event_upload_strategy=local
+
+# ==============================================================================
+# Testing Configuration
+# ==============================================================================
+
+# Test output configuration
+test --test_output=errors
+test --test_summary=detailed
+test --test_verbose_timeout_warnings
+
+# Test sharding for parallel execution
+test --test_sharding_strategy=experimental_heuristic
+
+# Coverage support
+coverage --combined_report=lcov
+coverage --experimental_fetch_all_coverage_outputs
+coverage --instrument_test_targets
+
+# ==============================================================================
+# Code Quality and Strict Build Enforcement
+# ==============================================================================
+
+# Strict action environment for reproducible builds
+build --incompatible_strict_action_env
+
+# Fail on warnings
+build --strict_java_deps=error
+build --explicit_java_test_deps
+
+# Consistent file system layout
+build --incompatible_remote_results_ignore_disk
+
+# ==============================================================================
+# Logging and Diagnostics
+# ==============================================================================
+
+# Colorized output
+common --color=yes
+common --curses=yes
+
+# Show progress messages
+build --show_progress
+build --show_progress_rate_limit=0.5
+
+# Detailed failure messages
+build --verbose_failures
+build --show_result=10
+
+# Record command line for debugging
+build --experimental_record_metrics_for_all_mnemonics
+
+# ==============================================================================
+# Platform-Specific Configurations
+# ==============================================================================
+
+# macOS
+build:macos --macos_minimum_os=13.0
+build:macos --host_macos_minimum_os=13.0
+
+# Linux
+build:linux --copt=-fdiagnostics-color=always
+
+# ==============================================================================
+# Development vs Production Builds
+# ==============================================================================
+
+# Development mode - fast iteration
+build:dev --compilation_mode=fastbuild
+build:dev --spawn_strategy=local
+build:dev --strategy=TypeScriptCompile=worker
+build:dev --strategy=Javac=worker
+
+# Production mode - optimized builds
+build:prod --compilation_mode=opt
+build:prod --strip=always
+build:prod --stamp
+
+# ==============================================================================
+# Aspect Rules JS/TS Optimizations
+# ==============================================================================
+
+# Enable SWC for faster TypeScript compilation
+build --@aspect_rules_swc//swc:swcrc=//:.swcrc
+
+# Jest test runner configuration
+test --test_env=JEST_JUNIT_OUTPUT_DIR=test-results
+
+# ==============================================================================
+# Query Optimizations
+# ==============================================================================
+
+# Faster query execution
+query --experimental_query_optimize
+
+# ==============================================================================
+# User-specific Configuration (gitignored)
+# ==============================================================================
+
+# Try to import user-specific configuration
+try-import %workspace%/.bazelrc.user

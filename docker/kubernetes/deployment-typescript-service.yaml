@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-client
+  namespace: enterprise
+  labels:
+    app: api-client
+    version: v1.0.0
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-client
+  template:
+    metadata:
+      labels:
+        app: api-client
+        version: v1.0.0
+    spec:
+      containers:
+      - name: api-client
+        image: gcr.io/your-project/api-client:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=2048"
+        - name: API_URL
+          value: "http://user-service"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65532
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-client
+  namespace: enterprise
+  labels:
+    app: api-client
+spec:
+  type: ClusterIP
+  selector:
+    app: api-client
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+    name: http

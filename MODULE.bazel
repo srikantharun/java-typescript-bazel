@@ -1,0 +1,173 @@
+"""
+Enterprise-Scale Java/TypeScript Bazel Monorepo
+Showcasing advanced Bazel patterns, custom rules, and build optimization
+"""
+
+module(
+    name = "enterprise_monorepo",
+    version = "1.0.0",
+)
+
+# Core Bazel dependencies
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+bazel_dep(name = "platforms", version = "1.0.0")
+
+# Aspect Build - Latest features for modern monorepo management
+bazel_dep(name = "aspect_bazel_lib", version = "2.21.2")
+bazel_dep(name = "aspect_rules_js", version = "2.2.0")
+bazel_dep(name = "aspect_rules_ts", version = "3.5.0")
+bazel_dep(name = "aspect_rules_esbuild", version = "0.23.0")
+bazel_dep(name = "aspect_rules_jest", version = "0.26.0")
+bazel_dep(name = "aspect_rules_swc", version = "2.2.0")
+
+# Java ecosystem with advanced features
+bazel_dep(name = "rules_java", version = "8.7.2")
+bazel_dep(name = "rules_jvm_external", version = "6.7.0")
+bazel_dep(name = "contrib_rules_jvm", version = "0.31.0")
+
+# Python for tooling and build automation
+bazel_dep(name = "rules_python", version = "1.6.3")
+
+# Protocol Buffers for cross-language interfaces
+bazel_dep(name = "protobuf", version = "33.0")
+
+# Build quality tools
+bazel_dep(name = "buildifier_prebuilt", version = "8.1.0", dev_dependency = True)
+
+# Container and packaging
+bazel_dep(name = "rules_oci", version = "2.2.6")
+bazel_dep(name = "rules_pkg", version = "1.1.0")
+
+# ============================================================================
+# Maven Dependencies - Enterprise Java Libraries
+# ============================================================================
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    name = "maven",
+    artifacts = [
+        # Core utilities
+        "com.google.guava:guava:33.4.0-jre",
+        "com.google.code.gson:gson:2.11.0",
+        "org.apache.commons:commons-lang3:3.17.0",
+
+        # Logging
+        "org.slf4j:slf4j-api:2.0.16",
+        "ch.qos.logback:logback-classic:1.5.16",
+
+        # Dependency Injection
+        "com.google.inject:guice:7.0.0",
+        "javax.inject:javax.inject:1",
+
+        # HTTP Client
+        "com.squareup.okhttp3:okhttp:4.12.0",
+
+        # Testing - JUnit 5
+        "org.junit.jupiter:junit-jupiter-api:5.11.4",
+        "org.junit.jupiter:junit-jupiter-engine:5.11.4",
+        "org.junit.jupiter:junit-jupiter-params:5.11.4",
+        "org.junit.platform:junit-platform-launcher:1.11.4",
+        "org.junit.platform:junit-platform-reporting:1.11.4",
+        "org.junit.platform:junit-platform-console:1.11.4",
+
+        # Mocking
+        "org.mockito:mockito-core:5.14.2",
+        "org.mockito:mockito-junit-jupiter:5.14.2",
+
+        # Assertions
+        "org.assertj:assertj-core:3.27.3",
+    ],
+    fail_if_repin_required = True,
+    fetch_sources = True,
+    lock_file = "//:maven_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+    strict_visibility = True,
+)
+use_repo(maven, "maven")
+
+# ============================================================================
+# Node.js and NPM Setup for TypeScript
+# ============================================================================
+node = use_extension("@aspect_rules_js//npm:extensions.bzl", "node")
+node.toolchain(
+    name = "node",
+    node_version = "20.18.2",
+)
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+npm.npm_translate_lock(
+    name = "npm",
+    npmrc = "//:.npmrc",
+    pnpm_lock = "//:pnpm-lock.yaml",
+    public_hoist_packages = {
+        # Hoist these packages to avoid duplication
+        "typescript": [""],
+        "@types/node": [""],
+    },
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+use_repo(npm, "npm")
+
+# ============================================================================
+# Python Toolchain for Build Automation Scripts
+# ============================================================================
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    name = "python3_12",
+    python_version = "3.12",
+)
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pip",
+    python_version = "3.12",
+    requirements_lock = "//:requirements_lock.txt",
+)
+use_repo(pip, "pip")
+
+# ============================================================================
+# OCI (Container) Images - Distroless base images
+# ============================================================================
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+
+# Java 21 distroless base image
+oci.pull(
+    name = "distroless_java21",
+    digest = "sha256:8cde8a8fff49a188c41ce9ad2c30bfa8fdb86db09dcc5b55f4c7e7b7de8e5bc8",
+    image = "gcr.io/distroless/java21-debian12",
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
+)
+
+# Node.js 20 distroless base image
+oci.pull(
+    name = "distroless_nodejs20",
+    digest = "sha256:7c21c5e2bb2b1c72e9fd5a4e1db4dd6f7a9e46a3f7d0c39c2f0a7f9e7a8e5c8b",
+    image = "gcr.io/distroless/nodejs20-debian12",
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
+)
+
+# Static distroless (for Go/Rust binaries)
+oci.pull(
+    name = "distroless_static",
+    digest = "sha256:c3c3d0230d487c0ad3a0d87ad03ee02ea2ff0b3dcce91ca06a1019e07de05f12",
+    image = "gcr.io/distroless/static-debian12",
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
+)
+
+use_repo(
+    oci,
+    "distroless_java21",
+    "distroless_nodejs20",
+    "distroless_static",
+    "docker_ubuntu",
+)

@@ -1,0 +1,114 @@
+"""
+User Service - Enterprise Microservice Example
+
+This demonstrates:
+- Clean architecture with layered design
+- Dependency injection
+- Comprehensive testing
+- Custom Bazel rules for automatic test generation
+"""
+
+load("@rules_java//java:defs.bzl", "java_binary", "java_library", "java_test")
+load("//build_tools/java:auto_test.bzl", "java_library_with_tests", "java_microservice")
+
+# Domain Model
+java_library(
+    name = "model",
+    srcs = ["model/User.java"],
+    deps = [
+        "@maven//:com_google_guava_guava",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Repository Layer
+java_library(
+    name = "repository",
+    srcs = ["repository/UserRepository.java"],
+    deps = [
+        ":model",
+        "@maven//:com_google_guava_guava",
+        "@maven//:javax_inject_javax_inject",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Service Layer
+java_library(
+    name = "service",
+    srcs = ["service/UserService.java"],
+    deps = [
+        ":model",
+        ":repository",
+        "@maven//:javax_inject_javax_inject",
+        "@maven//:org_slf4j_slf4j_api",
+        "@maven//:ch_qos_logback_logback_classic",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# API Layer
+java_library(
+    name = "api",
+    srcs = ["api/UserApi.java"],
+    deps = [
+        ":model",
+        ":service",
+        "@maven//:com_google_code_gson_gson",
+        "@maven//:javax_inject_javax_inject",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Complete microservice library
+java_library(
+    name = "userservice",
+    exports = [
+        ":api",
+        ":model",
+        ":repository",
+        ":service",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Unit Tests
+java_test(
+    name = "user_service_test",
+    size = "small",
+    srcs = ["test/UserServiceTest.java"],
+    test_class = "com.example.userservice.test.UserServiceTest",
+    deps = [
+        ":model",
+        ":repository",
+        ":service",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_junit_jupiter_junit_jupiter_engine",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_mockito_mockito_junit_jupiter",
+        "@maven//:org_assertj_assertj_core",
+    ],
+)
+
+# Test suite for all tests
+test_suite(
+    name = "all_tests",
+    tests = [
+        ":user_service_test",
+    ],
+    tags = ["microservice", "user-service"],
+)
+
+# Demonstrating custom rule usage (commented out as it requires test files to exist)
+# java_library_with_tests(
+#     name = "service_with_auto_tests",
+#     srcs = ["service/UserService.java"],
+#     deps = [
+#         ":model",
+#         ":repository",
+#         "@maven//:javax_inject_javax_inject",
+#         "@maven//:org_slf4j_slf4j_api",
+#     ],
+#     add_test = True,
+#     test_size = "small",
+# )

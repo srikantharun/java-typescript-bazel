@@ -1,0 +1,43 @@
+# Bazel
+bazel-*
+.bazel-cache/
+build_events.json
+
+# IntelliJ
+.idea/
+.ijwb/.blaze/
+*.iml
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+target/
+
+# Node/TypeScript
+node_modules/
+dist/
+*.js.map
+pnpm-lock.yaml
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+requirements_lock.txt
+
+# Testing
+coverage/
+test-results/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# User-specific
+.bazelrc.user
