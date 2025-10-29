@@ -4,7 +4,7 @@
 
 This repository demonstrates enterprise-scale build system design and optimization using Bazel, featuring custom Starlark rules, intelligent test selection, and advanced CI/CD patterns across Java and TypeScript codebases.
 
-## 🎯 Key Highlights
+## Key Highlights
 
 ### Build System Expertise
 
@@ -41,7 +41,7 @@ enterprise-monorepo/
 └── .ijwb/                        # IntelliJ Bazel plugin config
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -68,7 +68,7 @@ bazel test //java/com/example/userservice:all_tests
 bazel test //typescript/packages/api-client:api-client-test
 ```
 
-## 💡 Advanced Features
+## Advanced Features
 
 ### 1. Custom Starlark Rules for Test Generation
 
@@ -213,7 +213,7 @@ docker-compose -f docker/docker-compose.yml up
 
 See [docker/README.md](docker/README.md) for detailed documentation.
 
-## 📊 Build Optimization Strategies
+## Build Optimization Strategies
 
 ### Remote Caching
 
@@ -254,7 +254,7 @@ bazel build --jobs=16 //...
 bazel test --test_sharding_strategy=experimental_heuristic //...
 ```
 
-## 🏗️ Architecture Patterns
+## Architecture Patterns
 
 ### Java Microservice (Clean Architecture)
 
@@ -293,7 +293,7 @@ const user = await client.createUser({
 - Comprehensive error handling
 - Jest unit tests with 100% coverage
 
-## 🔧 Development Workflow
+## Development Workflow
 
 ### Adding a New Java Service
 
@@ -349,7 +349,7 @@ bazel run @buildifier_prebuilt//:buildifier
 bazel run @buildifier_prebuilt//:buildifier -- --mode=check
 ```
 
-## 📈 Performance Metrics
+## Performance Metrics
 
 ### Build Time Improvements
 
@@ -368,7 +368,7 @@ bazel run @buildifier_prebuilt//:buildifier -- --mode=check
 - **1500+ Bazel targets**: Fine-grained dependency management
 - **50GB disk cache**: Optimal cache size with automatic GC
 
-## 🎓 Learning Resources
+## Learning Resources
 
 ### Key Concepts Demonstrated
 
@@ -387,7 +387,7 @@ bazel run @buildifier_prebuilt//:buildifier -- --mode=check
 - [aspect_rules_ts](https://github.com/aspect-build/rules_ts)
 - [IntelliJ Bazel Plugin](https://plugins.jetbrains.com/plugin/8609-bazel)
 
-## 🤝 Best Practices
+## Best Practices
 
 ### Starlark Development
 
@@ -445,60 +445,3 @@ mv github_test .github
 git add .github && git commit -m "Enable CI/CD" && git push
 ```
 
-**Pipeline Features:**
-- ✅ Multi-platform matrix builds (Linux, macOS)
-- ✅ Intelligent test selection (70% faster)
-- ✅ Aggressive Bazel caching (60% cost reduction)
-- ✅ BEP monitoring and analysis
-- ✅ Container image builds and registry push
-- ✅ Artifact uploads and test logs
-
-**Cost Analysis:**
-- **Public repos**: $0/month (unlimited free minutes)
-- **Private repos**: ~$12-600/month depending on usage
-- **Self-hosted runners**: $0 GitHub charges (infrastructure only)
-
-See [github_test/README.md](github_test/README.md) for comprehensive cost analysis and activation guide.
-
-## 📝 Resume Highlights Demonstrated
-
-### Technical Accomplishments
-
-✅ **Bazel Build System Migration & Optimization**: Complete monorepo with custom rules, 60% faster builds
-
-✅ **Advanced Starlark Rules Development**: `add_test` flag functionality with automatic test generation
-
-✅ **Java & Rust Build Infrastructure**: Enterprise-scale Java microservices with hermetic builds (Rust patterns included in fractile analysis)
-
-✅ **IntelliJ Bazel Plugin Customization**: Optimized `.bazelproject` configuration for seamless IDE integration
-
-✅ **Monorepo Scaling & Developer Experience**: Intelligent test selection reducing CI time by 70%
-
-✅ **CI/CD Pipeline Optimization**: BEP integration with sophisticated caching strategies
-
-✅ **Build System Governance & Tooling**: Python-based analysis tools, dependency visualization, build health metrics
-
-## 🎯 Next Steps
-
-### Planned Enhancements
-
-- [ ] Rust integration with rules_rust
-- [ ] Container building with rules_oci
-- [ ] Remote execution with BuildBuddy/BuildFarm
-- [ ] Buildifier pre-commit hooks
-- [ ] Grafana dashboard for BEP metrics
-- [ ] Automatic dependency updates with Renovate
-
-## 📞 Contact
-
-This repository showcases advanced Bazel build system engineering and can serve as a portfolio piece demonstrating:
-
-- Deep understanding of build system architecture
-- Custom tooling development
-- Performance optimization
-- Developer experience improvement
-- Large-scale monorepo management
-
----
-
-**Built with ❤️ using Bazel 8.2.1 and Aspect Build**
