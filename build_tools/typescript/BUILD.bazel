@@ -1,0 +1,7 @@
+"""
+Build rules for TypeScript custom Starlark rules
+"""
+
+exports_files([
+    "ts_project_enhanced.bzl",
+])

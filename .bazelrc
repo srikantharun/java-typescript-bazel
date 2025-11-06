@@ -38,9 +38,6 @@ build --repository_cache=~/.cache/bazel/repository_cache
 build --experimental_remote_merkle_tree_cache
 build --experimental_remote_cache_compression
 
-# Incremental actions
-build --experimental_incremental_dexing=yes
-
 # ==============================================================================
 # Remote Execution and Caching (Configure for your environment)
 # ==============================================================================
@@ -94,9 +91,6 @@ build --incompatible_strict_action_env
 # Fail on warnings
 build --strict_java_deps=error
 build --explicit_java_test_deps
-
-# Consistent file system layout
-build --incompatible_remote_results_ignore_disk
 
 # ==============================================================================
 # Logging and Diagnostics

@@ -1,0 +1,8 @@
+"""
+Build rules for Java custom Starlark rules
+"""
+
+exports_files([
+    "auto_test.bzl",
+    "dependency_analyzer.bzl",
+])

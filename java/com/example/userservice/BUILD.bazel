@@ -9,7 +9,7 @@ This demonstrates:
 """
 
 load("@rules_java//java:defs.bzl", "java_binary", "java_library", "java_test")
-load("//build_tools/java:auto_test.bzl", "java_library_with_tests", "java_microservice")
+# load("//build_tools/java:auto_test.bzl", "java_library_with_tests", "java_microservice")
 
 # Domain Model
 java_library(
