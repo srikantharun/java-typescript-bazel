@@ -1,0 +1,168 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: java-typescript-bazel-monorepo
+  description: |
+    Enterprise monorepo demonstrating Bazel build system patterns for Java and TypeScript.
+    Features custom Starlark rules, cross-language build orchestration, and reusable build components.
+    Showcases platform engineering best practices for large-scale monorepo management.
+  annotations:
+    github.com/project-slug: srikantharun/java-typescript-bazel
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - bazel
+    - monorepo
+    - java
+    - typescript
+    - build-system
+    - devops
+    - ci-cd
+    - platform-engineering
+  links:
+    - url: https://github.com/srikantharun/java-typescript-bazel
+      title: GitHub Repository
+      icon: github
+    - url: https://github.com/srikantharun/java-typescript-bazel/actions
+      title: GitHub Actions
+      icon: dashboard
+    - url: https://bazel.build
+      title: Bazel Documentation
+      icon: docs
+
+spec:
+  type: library
+  lifecycle: production
+  owner: platform-team
+  system: build-infrastructure
+
+  # Define what this component provides
+  providesApis:
+    - build-system-api
+
+  # Define what this component depends on
+  dependsOn:
+    - resource:bazel-remote-cache
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: build-system-api
+  description: Bazel build system API and custom Starlark rules for monorepo management
+  tags:
+    - bazel
+    - build-api
+    - starlark
+  links:
+    - url: https://github.com/srikantharun/java-typescript-bazel/blob/main/README.md
+      title: Build System Documentation
+      icon: docs
+
+spec:
+  type: openapi
+  lifecycle: production
+  owner: platform-team
+  system: build-infrastructure
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Bazel Build System API
+      version: 1.0.0
+      description: API for interacting with the monorepo build system
+    paths:
+      /build:
+        get:
+          summary: Trigger build
+          description: Execute Bazel build command for specified targets
+          parameters:
+            - name: targets
+              in: query
+              description: Bazel targets to build
+              required: true
+              schema:
+                type: string
+                example: "//java/..."
+          responses:
+            200:
+              description: Build successful
+            500:
+              description: Build failed
+      /test:
+        get:
+          summary: Run tests
+          description: Execute Bazel test command for specified targets
+          parameters:
+            - name: targets
+              in: query
+              description: Bazel test targets
+              required: true
+              schema:
+                type: string
+                example: "//java/..."
+          responses:
+            200:
+              description: Tests passed
+            500:
+              description: Tests failed
+      /query:
+        get:
+          summary: Query build graph
+          description: Execute Bazel query to analyze dependencies
+          parameters:
+            - name: expression
+              in: query
+              description: Bazel query expression
+              required: true
+              schema:
+                type: string
+                example: "deps(//java/...)"
+          responses:
+            200:
+              description: Query successful
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: bazel-remote-cache
+  description: Bazel remote cache for distributed builds and CI/CD acceleration
+  tags:
+    - cache
+    - infrastructure
+    - performance
+  links:
+    - url: https://bazel.build/remote/caching
+      title: Remote Caching Documentation
+      icon: docs
+
+spec:
+  type: cache
+  owner: platform-team
+  system: build-infrastructure
+  dependsOn: []
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: build-infrastructure
+  description: Enterprise build infrastructure system supporting monorepo development
+  tags:
+    - infrastructure
+    - platform
+    - build
+
+spec:
+  owner: platform-team
+  domain: platform-engineering
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  description: Platform Engineering team responsible for build infrastructure and developer experience
+
+spec:
+  type: team
+  children: []
