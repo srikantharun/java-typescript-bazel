@@ -169,7 +169,7 @@ oci_image(
     tars = [":java_service_layer"],
     entrypoint = [
         "java",
-        "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005",
+        "-agentlib:jcompanyx=transport=dt_socket,server=y,suspend=n,address=*:5005",
         "-jar",
         "/app/service.jar",
     ],
