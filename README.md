@@ -445,4 +445,6 @@ mv github_test .github
 git add .github && git commit -m "Enable CI/CD" && git push
 ```
 
-# CI/CD Test
+## CI/CD Pipeline Status
+
+GitHub Actions workflow is now active and configured to run on every push to main and develop branches.
