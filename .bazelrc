@@ -74,7 +74,7 @@ test --test_summary=detailed
 test --test_verbose_timeout_warnings
 
 # Test sharding for parallel execution
-test --test_sharding_strategy=experimental_heuristic
+# Temporarily disabled: test --test_sharding_strategy=explicit
 
 # Coverage support
 coverage --combined_report=lcov
@@ -142,7 +142,7 @@ build:prod --stamp
 # ==============================================================================
 
 # Enable SWC for faster TypeScript compilation
-build --@aspect_rules_swc//swc:swcrc=//:.swcrc
+# build --@aspect_rules_swc//swc:swcrc=//:.swcrc
 
 # Jest test runner configuration
 test --test_env=JEST_JUNIT_OUTPUT_DIR=test-results
