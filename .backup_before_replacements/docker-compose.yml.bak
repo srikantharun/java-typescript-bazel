@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Java microservice
+  user-service:
+    image: enterprise/user-service:latest
+    container_name: user-service
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_ENV=development
+      - LOG_LEVEL=DEBUG
+      - JAVA_OPTS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - enterprise-network
+    restart: unless-stopped
+    labels:
+      - "service.type=api"
+      - "service.version=1.0.0"
+
+  # TypeScript/Node.js API client service
+  api-client:
+    image: enterprise/api-client:latest
+    container_name: api-client
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - API_URL=http://user-service:8080
+      - NODE_OPTIONS=--max-old-space-size=2048
+    depends_on:
+      user-service:
+        condition: service_healthy
+    networks:
+      - enterprise-network
+    restart: unless-stopped
+    labels:
+      - "service.type=client"
+      - "service.version=1.0.0"
+
+  # Optional: Development tools container
+  dev-tools:
+    image: enterprise/dev-tools:latest
+    container_name: dev-tools
+    command: sleep infinity
+    volumes:
+      - ..:/workspace
+    working_dir: /workspace
+    networks:
+      - enterprise-network
+    profiles:
+      - debug
+
+networks:
+  enterprise-network:
+    driver: bridge
+    name: enterprise-network
